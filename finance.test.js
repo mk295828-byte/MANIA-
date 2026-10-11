@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {summarize} from './finance.js';
+test('Prognoza zastępuje wycenę wykonanych badań i pomija anulowane',()=>{const r=summarize([{status:'done',estimate:25000,actual:15000},{status:'planned',estimate:295000},{status:'cancelled',estimate:90000}],300000);assert.equal(r.forecast,310000);assert.equal(r.spent,15000);assert.equal(r.savings,10000);assert.equal(r.balance,-10000);});
+test('Saldo dodatnie i brak budżetu',()=>{assert.equal(summarize([{status:'planned',estimate:280000}],300000).balance,20000);assert.equal(summarize([],null).balance,null);});
+test('Przekroczenia kosztów i dokładność groszy',()=>{const r=summarize([{status:'done',estimate:18001,actual:22002}],22002);assert.equal(r.savings,-4001);assert.equal(r.balance,0);});
